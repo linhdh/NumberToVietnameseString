@@ -11,7 +11,7 @@ namespace NumberToVietnameseString
 
 		static void Main(string[] args)
 		{
-			Console.OutputEncoding = System.Text.Encoding.UTF8;
+			Console.OutputEncoding = Encoding.UTF8;
 			// Kiểm tra ngẫu nhiên 1000 số
 			int ntest = 1000;
 			Random rn = new Random();
@@ -35,80 +35,120 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[thousandBillions] + " nghìn ");
 				}
+				
 				ulong hundredBillions = thousandBillionsRemainder / 100_000_000_000L;
 				ulong hundredBillionsRemainder = thousandBillionsRemainder % 100_000_000_000L;
-				if (hundredBillions > 0)
+				if (stringBuilder.Length > 0 || hundredBillions > 0)
 				{
 					stringBuilder.Append(_number_texts[hundredBillions] + " trăm ");
 				}
+
 				var tenBillions = hundredBillionsRemainder / 10_000_000_000L;
 				var tenBillionsRemainder = hundredBillionsRemainder % 10_000_000_000L;
-				if (tenBillions > 0)
+				if (stringBuilder.Length > 0)
 				{
-					stringBuilder.Append(_number_texts[tenBillions] + " mươi ");
+					if (tenBillions > 1)
+					{
+						stringBuilder.Append(_number_texts[tenBillions] + " mươi ");
+					}
+					else if (tenBillions == 1)
+					{
+						stringBuilder.Append(" mười ");
+					}
 				}
+
 				var billions = tenBillionsRemainder / 1_000_000_000L;
 				var billionsRemainder = tenBillionsRemainder % 1_000_000_000L;
 				if (billions > 0)
 				{
-					stringBuilder.Append(_number_texts[billions] + " tỉ ");
+					stringBuilder.Append(_number_texts[billions]);
 				}
-
+				if (stringBuilder.Length > 0)
+				{
+					stringBuilder.Append(" tỉ ");
+				}
+				////////////////////////////////////////////////////////////////////////
 				var hundredMillions = billionsRemainder / 100_000_000L;
 				var hundredMillionsRemainder = billionsRemainder % 100_000_000L;
-				if (hundredBillions > 0)
+				if (stringBuilder.Length > 0 || hundredMillions > 0)
 				{
 					stringBuilder.Append(_number_texts[hundredMillions] + " trăm ");
 				}
+
 				var tenMillions = hundredMillionsRemainder / 10_000_000L;
 				var tenMillionsRemainder = hundredMillionsRemainder % 10_000_000L;
-				if (tenBillions > 0)
+				if (tenMillions == 1)
+				{
+					stringBuilder.Append(" mười ");
+				}
+				else if (tenMillions > 1)
 				{
 					stringBuilder.Append(_number_texts[tenMillions] + " mươi ");
 				}
+				
 				var millions = tenMillionsRemainder / 1_000_000L;
 				var millionsRemainder = tenMillionsRemainder % 1_000_000L;
 				if (millions > 0)
 				{
-					stringBuilder.Append(_number_texts[millions] + " triệu ");
+					stringBuilder.Append(_number_texts[millions]);
 				}
-
+				if (hundredMillions > 0 || tenMillions > 0 || millions > 0)
+				{
+					stringBuilder.Append(" triệu ");
+				}
+				/////////////////////////////////////////////////////////////////////////
 				var hundredThousands = millionsRemainder / 100_000L;
 				var hundredThousandsRemainder = millionsRemainder % 100_000L;
-				if (hundredThousands > 0)
+				if (stringBuilder.Length > 0 || hundredThousands > 0)
 				{
 					stringBuilder.Append(_number_texts[hundredThousands] + " trăm ");
 				}
+
 				var tenThousands = hundredThousandsRemainder / 10_000L;
 				var tenThousandsRemainder = hundredThousandsRemainder % 10_000L;
-				if (tenThousands > 0)
+				if (tenThousands > 1)
 				{
 					stringBuilder.Append(_number_texts[tenThousands] + " mươi ");
 				}
+				else if (tenThousands == 1)
+				{
+					stringBuilder.Append(" mười ");
+				}
+				else if (tenThousands == 0)
+				{
+					stringBuilder.Append(_number_texts[tenThousands]);
+				}
+				
 				var thousands = tenThousandsRemainder / 1_000L;
 				var thousandsRemainder = tenThousandsRemainder % 1_000L;
 				if (thousands > 0)
 				{
-					stringBuilder.Append(_number_texts[thousands] + " nghìn ");
+					stringBuilder.Append(_number_texts[thousands]);
 				}
 
+				if (hundredThousands > 0 || tenThousands > 0 || thousands > 0)
+				{
+					stringBuilder.Append(" nghìn ");
+				}
+				///////////////////////////////////////////////////////////////////////////
 				var hundreds = thousandsRemainder / 100L;
 				var hundredsRemainder = thousandsRemainder % 100L;
-				if (hundreds > 0)
-				{
-					stringBuilder.Append(_number_texts[hundreds] + " trăm ");
-				}
+				stringBuilder.Append(_number_texts[hundreds] + " trăm ");
+
 				var tens = hundredsRemainder / 10L;
 				var tensRemainder = hundredsRemainder % 10L;
 				if (tens > 0)
 				{
 					stringBuilder.Append(_number_texts[tens] + " mươi ");
 				}
-				var unit = tensRemainder % 1L;
-				if (tens > 0)
+				
+				var unit = tensRemainder;
+				if (unit > 0)
 				{
-					stringBuilder.Append(_number_texts[tens] + " đồng ");
+					stringBuilder.Append(_number_texts[unit]);
 				}
+				stringBuilder.Append(" đồng ");
+
 				return stringBuilder.ToString();
 			}
 			else
