@@ -1,26 +1,39 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System;
 using System.Text;
 
 namespace NumberToVietnameseString
 {
 	class Program
 	{
+		static void Main(string[] args)
+		{
+			var sumary = BenchmarkRunner.Run<MoneyNumberToString>();
+		}
+	}
+
+	[MemoryDiagnoser]
+	public class MoneyNumberToString
+	{
 		private static readonly string[] _number_texts = new string[] { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
 		//private static readonly string[] _number_units = new string[] { "chục", "trăm", "nghìn", "triệu", "tỉ" };
 		//private static readonly string[] _place_texts = new string[] { "chục", "trăm", "nghìn", "chục nghìn", "trăm nghìn", "triệu", "chục triệu", "trăm triệu", "tỉ", "chục tỉ", "trăm tỉ", "nghìn tỉ" };
 
-		static void Main(string[] args)
+		[Benchmark]
+		public void RunTest()
 		{
 			Console.OutputEncoding = Encoding.UTF8;
-			{
-				ulong number = 442_810_518_213;
-				var text = PriceToPriceString(number);
-				var ntext = number.ToString("###,###,###,###,###");
-				Console.WriteLine($"{ntext,20} --> {text}");
-			}
-			// Kiểm tra ngẫu nhiên 1000 số
 
-			int ntest = 1000;
+			//{
+			//	ulong number = 442_810_518_213;
+			//	var text = PriceToPriceString(number);
+			//	var ntext = number.ToString("###,###,###,###,###");
+			//	Console.WriteLine($"{ntext,20} --> {text}");
+			//}
+
+			// Kiểm tra ngẫu nhiên 1000 số
+			int ntest = 100000;
 			Random rn = new Random();
 			for (int i = 0; i < ntest; i++)
 			{
@@ -34,7 +47,7 @@ namespace NumberToVietnameseString
 			}
 		}
 
-		private static string PriceToPriceString(ulong Price)
+		private string PriceToPriceString(ulong Price)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 			if (Price < 10000_000_000_000L)
@@ -45,7 +58,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[thousandBillions] + " nghìn ");
 				}
-				
+
 				ulong hundredBillions = thousandBillionsRemainder / 100_000_000_000L;
 				ulong hundredBillionsRemainder = thousandBillionsRemainder % 100_000_000_000L;
 				if (stringBuilder.Length > 0 || hundredBillions > 0)
@@ -95,7 +108,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[tenMillions] + " mươi ");
 				}
-				
+
 				var millions = tenMillionsRemainder / 1_000_000L;
 				var millionsRemainder = tenMillionsRemainder % 1_000_000L;
 				if (millions > 0)
@@ -128,7 +141,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[tenThousands] + " ");
 				}
-				
+
 				var thousands = tenThousandsRemainder / 1_000L;
 				var thousandsRemainder = tenThousandsRemainder % 1_000L;
 				if (thousands > 0)
@@ -163,8 +176,8 @@ namespace NumberToVietnameseString
 				else if (tens == 1)
 				{
 					stringBuilder.Append(" mười ");
-				}	
-				
+				}
+
 				if (unit > 0)
 				{
 					stringBuilder.Append(_number_texts[unit]);
@@ -178,8 +191,8 @@ namespace NumberToVietnameseString
 					int index2 = -1;
 					do
 					{
-						index1 = result.IndexOf(" ", index2+1);
-						while (result[index1+1] == ' ')
+						index1 = result.IndexOf(" ", index2 + 1);
+						while (result[index1 + 1] == ' ')
 						{
 							result = result.Remove(index1 + 1, 1);
 						}
