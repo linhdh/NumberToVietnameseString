@@ -24,7 +24,6 @@ namespace NumberToVietnameseString
 		public void RunTest()
 		{
 			Console.OutputEncoding = Encoding.UTF8;
-
 			//{
 			//	ulong number = 442_810_518_213;
 			//	var text = PriceToPriceString(number);
@@ -33,7 +32,7 @@ namespace NumberToVietnameseString
 			//}
 
 			// Kiểm tra ngẫu nhiên 1000 số
-			int ntest = 100000;
+			int ntest = 1000;
 			Random rn = new Random();
 			for (int i = 0; i < ntest; i++)
 			{
@@ -182,6 +181,11 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[unit]);
 				}
+				else if (unit == 0 && stringBuilder.Length == 0)
+				{
+					stringBuilder.Append(_number_texts[unit]);
+				}
+
 				stringBuilder.Append(" đồng");
 				////////////////////////////////////////////////////////////////////////
 				string result = stringBuilder.ToString().Trim();
