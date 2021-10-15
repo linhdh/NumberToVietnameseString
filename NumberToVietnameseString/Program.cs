@@ -117,7 +117,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(" mười ");
 				}
-				else if (tenThousands == 0)
+				else if (tenThousands == 0 && stringBuilder.Length > 0)
 				{
 					stringBuilder.Append(_number_texts[tenThousands] + " ");
 				}
@@ -162,7 +162,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[unit]);
 				}
-				stringBuilder.Append(" đồng ");
+				stringBuilder.Append(" đồng");
 
 				return stringBuilder.ToString();
 			}
