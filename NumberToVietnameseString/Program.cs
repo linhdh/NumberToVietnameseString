@@ -17,7 +17,10 @@ namespace NumberToVietnameseString
 			Random rn = new Random();
 			for (int i = 0; i < ntest; i++)
 			{
-				ulong number = (ulong)(rn.NextDouble() * rn.Next(1, Int32.MaxValue));
+				ulong number = (ulong)rn.Next(1, 1000) * (ulong)rn.Next(1, Int32.MaxValue);
+				if (number > 10000_000_000_000L)
+					continue;
+
 				var text = PriceToPriceString(number);
 				var ntext = number.ToString("###,###,###,###,###");
 				Console.WriteLine($"{ntext,20} --> {text}");
@@ -27,7 +30,7 @@ namespace NumberToVietnameseString
 		private static string PriceToPriceString(ulong Price)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			if (Price < 1000_000_000_000L)
+			if (Price < 10000_000_000_000L)
 			{
 				ulong thousandBillions = Price / 1000_000_000_000L;
 				ulong thousandBillionsRemainder = Price % 1000_000_000_000L;
@@ -116,7 +119,7 @@ namespace NumberToVietnameseString
 				}
 				else if (tenThousands == 0)
 				{
-					stringBuilder.Append(_number_texts[tenThousands]);
+					stringBuilder.Append(_number_texts[tenThousands] + " ");
 				}
 				
 				var thousands = tenThousandsRemainder / 1_000L;
@@ -133,16 +136,28 @@ namespace NumberToVietnameseString
 				///////////////////////////////////////////////////////////////////////////
 				var hundreds = thousandsRemainder / 100L;
 				var hundredsRemainder = thousandsRemainder % 100L;
-				stringBuilder.Append(_number_texts[hundreds] + " trăm ");
-
 				var tens = hundredsRemainder / 10L;
 				var tensRemainder = hundredsRemainder % 10L;
-				if (tens > 0)
+				var unit = tensRemainder;
+
+				if (hundreds > 0 || tens > 0 || unit > 0)
+				{
+					stringBuilder.Append(_number_texts[hundreds] + " trăm ");
+				}
+
+				if (tens > 1)
 				{
 					stringBuilder.Append(_number_texts[tens] + " mươi ");
 				}
+				else if (tens == 0)
+				{
+					stringBuilder.Append(_number_texts[tens] + " ");
+				}
+				else if (tens == 1)
+				{
+					stringBuilder.Append(" mười ");
+				}	
 				
-				var unit = tensRemainder;
 				if (unit > 0)
 				{
 					stringBuilder.Append(_number_texts[unit]);
