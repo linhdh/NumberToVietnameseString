@@ -12,7 +12,14 @@ namespace NumberToVietnameseString
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = Encoding.UTF8;
+			{
+				ulong number = 442_810_518_213;
+				var text = PriceToPriceString(number);
+				var ntext = number.ToString("###,###,###,###,###");
+				Console.WriteLine($"{ntext,20} --> {text}");
+			}
 			// Kiểm tra ngẫu nhiên 1000 số
+
 			int ntest = 1000;
 			Random rn = new Random();
 			for (int i = 0; i < ntest; i++)
@@ -149,7 +156,7 @@ namespace NumberToVietnameseString
 				{
 					stringBuilder.Append(_number_texts[tens] + " mươi ");
 				}
-				else if (tens == 0)
+				else if (tens == 0 && unit > 0)
 				{
 					stringBuilder.Append(_number_texts[tens] + " ");
 				}
@@ -163,8 +170,24 @@ namespace NumberToVietnameseString
 					stringBuilder.Append(_number_texts[unit]);
 				}
 				stringBuilder.Append(" đồng");
-
-				return stringBuilder.ToString();
+				////////////////////////////////////////////////////////////////////////
+				string result = stringBuilder.ToString().Trim();
+				if (!string.IsNullOrWhiteSpace(result))
+				{
+					int index1;
+					int index2 = -1;
+					do
+					{
+						index1 = result.IndexOf(" ", index2+1);
+						while (result[index1+1] == ' ')
+						{
+							result = result.Remove(index1 + 1, 1);
+						}
+						index2 = index1;
+					} while (index1 >= 0);
+					result = result[0].ToString().ToUpper() + result.Substring(1);
+				}
+				return result;
 			}
 			else
 			{
